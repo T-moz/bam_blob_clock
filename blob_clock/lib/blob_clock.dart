@@ -6,31 +6,24 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:developer' as developer;
 
-
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 enum _Element {
   background,
-  text,
-  shadow,
+  fillText,
+  strokeText
 }
 
 final _lightBackground = "assets/img/Clock with soft UI - background.png";
 
-final _darkBackground = "assets/img/Clock with soft UI - darkmode - background.png";
+final _darkBackground =
+    "assets/img/Clock with soft UI - darkmode - background.png";
 
+final _lightTheme = {_Element.fillText: Color(0xFFEAA89A), _Element.strokeText: Colors.black};
 
-final _lightTheme = {
-  _Element.text: Colors.white,
-  _Element.shadow: Colors.black,
-};
-
-final _darkTheme = {
-  _Element.text: Colors.white,
-  _Element.shadow: Color(0xFF174EA6),
-};
+final _darkTheme = {_Element.fillText: Color(0xFFC4C4C4),  _Element.strokeText: Colors.white};
 
 /// A basic digital clock.
 ///
@@ -107,46 +100,47 @@ class _BlobClockState extends State<BlobClock> {
     final background = Theme.of(context).brightness == Brightness.light
         ? _lightBackground
         : _darkBackground;
-    stderr.writeln("Hello !!!!");
-      developer.log( background);
 
     stderr.writeln(background);
-    final hour =
-        DateFormat(widget.model.is24HourFormat ? 'HH' : 'hh').format(_dateTime);
-    final minute = DateFormat('mm').format(_dateTime);
-    final fontSize = MediaQuery.of(context).size.width / 7;
-    final offset = -fontSize / 7;
-    final defaultStyle = TextStyle(
-      color: colors[_Element.text],
-      fontFamily: 'PressStart2P',
+    final hour = DateFormat(widget.model.is24HourFormat ? 'HH:mm' : 'hh:mm')
+        .format(_dateTime);
+    final fontSize = MediaQuery.of(context).size.width / 5;
+    final offset = fontSize / 4;
+    final strockStyle = TextStyle(
+      fontFamily: 'Comfortaa',
       fontSize: fontSize,
-      shadows: [
-        Shadow(
-          blurRadius: 0,
-          color: colors[_Element.shadow],
-          offset: Offset(10, 0),
-        ),
-      ],
+      foreground: Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..color = colors[_Element.strokeText],
     );
-
+    final fillStyle = TextStyle(
+      color: colors[_Element.fillText],
+      fontFamily: 'Comfortaa',
+      fontSize: fontSize,
+    );
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(background),
-            fit: BoxFit.cover,
-          ),
+        image: DecorationImage(
+          image: AssetImage(background),
+          fit: BoxFit.cover,
+        ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(72.0),
+        padding: const EdgeInsets.symmetric(vertical: 46.0, horizontal: 56.0),
         child: Center(
-          child: DefaultTextStyle(
-            style: defaultStyle,
-            child: Stack(
-              children: <Widget>[
-                Positioned(left: offset, top: 0, child: Text(hour)),
-                Positioned(right: offset, bottom: offset, child: Text(minute)),
-              ],
-            ),
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                  left: offset + 4.0,
+                  top: offset + 4.0,
+                  child: DefaultTextStyle(style: fillStyle, child: Text(hour))),
+              Positioned(
+                  left: offset,
+                  top: offset,
+                  child:
+                      DefaultTextStyle(style: strockStyle, child: Text(hour))),
+            ],
           ),
         ),
       ),
