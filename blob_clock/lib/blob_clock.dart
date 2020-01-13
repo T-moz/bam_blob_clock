@@ -10,20 +10,21 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-enum _Element {
-  background,
-  fillText,
-  strokeText
-}
+enum _Element { background, fillText, strokeText }
 
-final _lightBackground = "assets/img/Clock with soft UI - background.png";
+final _lightBackground = "assets/img/lightBackground.png";
 
-final _darkBackground =
-    "assets/img/Clock with soft UI - darkmode - background.png";
+final _darkBackground = "assets/img/darkBackground.png";
 
-final _lightTheme = {_Element.fillText: Color(0xFFEAA89A), _Element.strokeText: Colors.black};
+final _lightTheme = {
+  _Element.fillText: Color(0xFFEAA89A),
+  _Element.strokeText: Colors.black
+};
 
-final _darkTheme = {_Element.fillText: Color(0xFFC4C4C4),  _Element.strokeText: Colors.white};
+final _darkTheme = {
+  _Element.fillText: Color(0xFFC4C4C4),
+  _Element.strokeText: Colors.white
+};
 
 /// A basic digital clock.
 ///
@@ -100,8 +101,6 @@ class _BlobClockState extends State<BlobClock> {
     final background = Theme.of(context).brightness == Brightness.light
         ? _lightBackground
         : _darkBackground;
-
-    stderr.writeln(background);
     final hour = DateFormat(widget.model.is24HourFormat ? 'HH:mm' : 'hh:mm')
         .format(_dateTime);
     final fontSize = MediaQuery.of(context).size.width / 5;
@@ -132,14 +131,12 @@ class _BlobClockState extends State<BlobClock> {
           child: Stack(
             children: <Widget>[
               Positioned(
-                  left: offset + 4.0,
-                  top: offset + 4.0,
-                  child: DefaultTextStyle(style: fillStyle, child: Text(hour))),
-              Positioned(
-                  left: offset,
-                  top: offset,
+                  left: 4.0,
+                  top: 4.0,
                   child:
-                      DefaultTextStyle(style: strockStyle, child: Text(hour))),
+                      DefaultTextStyle(style: fillStyle, child: Text(hour))),
+              DefaultTextStyle(
+                  style: strockStyle, child: Text(hour)),
             ],
           ),
         ),
