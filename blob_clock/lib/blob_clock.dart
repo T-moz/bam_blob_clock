@@ -106,7 +106,7 @@ class _BlobClockState extends State<BlobClock> {
     final fontSize = MediaQuery.of(context).size.width / 5;
     final offset = fontSize / 4;
     final strockStyle = TextStyle(
-      fontFamily: 'Comfortaa',
+      fontFamily: 'Nunito',
       fontSize: fontSize,
       foreground: Paint()
         ..style = PaintingStyle.stroke
@@ -115,7 +115,7 @@ class _BlobClockState extends State<BlobClock> {
     );
     final fillStyle = TextStyle(
       color: colors[_Element.fillText],
-      fontFamily: 'Comfortaa',
+      fontFamily: 'Nunito',
       fontSize: fontSize,
     );
     return Container(
@@ -131,12 +131,11 @@ class _BlobClockState extends State<BlobClock> {
           child: Stack(
             children: <Widget>[
               Positioned(
-                  left: 4.0,
-                  top: 4.0,
-                  child:
-                      DefaultTextStyle(style: fillStyle, child: Text(hour))),
-              DefaultTextStyle(
-                  style: strockStyle, child: Text(hour)),
+                left: 4.0,
+                top: 4.0,
+                child: DefaultTextStyle(style: fillStyle, child: Text(hour)),
+              ),
+              DefaultTextStyle(style: strockStyle, child: Text(hour)),
             ],
           ),
         ),
