@@ -21,9 +21,6 @@ flutter:
   assets:
     - assets/img/
   fonts:
-    - family: PressStart2P
+    - family : Nunito
       fonts:
-        - asset: third_party/PressStart2P-Regular.ttf
-    - family : Comfortaa
-      fonts:
-        - asset: assets/fonts/Comfortaa-Bold.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
