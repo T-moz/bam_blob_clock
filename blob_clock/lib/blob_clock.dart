@@ -104,7 +104,6 @@ class _BlobClockState extends State<BlobClock> {
     final hour = DateFormat(widget.model.is24HourFormat ? 'HH:mm' : 'hh:mm')
         .format(_dateTime);
     final fontSize = MediaQuery.of(context).size.width / 5;
-    final offset = fontSize / 4;
     final strockStyle = TextStyle(
       fontFamily: 'Nunito',
       fontSize: fontSize,
