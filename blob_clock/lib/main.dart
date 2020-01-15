@@ -4,13 +4,13 @@
 
 import 'dart:io';
 
+import 'package:blob_clock/clock.dart';
 import 'package:flutter/services.dart' show SystemChrome, DeviceOrientation;
 import 'package:flutter_clock_helper/customizer.dart';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'blob_clock.dart';
 
 void main() {
   if (!kIsWeb && Platform.isMacOS) {
@@ -21,5 +21,5 @@ void main() {
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
   ]);
-  runApp(ClockCustomizer((ClockModel model) => BlobClock(model)));
+  runApp(ClockCustomizer((ClockModel model) => Clock(model)));
 }

@@ -1,9 +1,10 @@
+import 'package:blob_clock/digit.dart';
+import 'package:blob_clock/digitClipper.dart';
 import 'package:flutter/material.dart';
-import 'package:lava_lamp_clock/digit.dart';
-import 'package:lava_lamp_clock/digitClipper.dart';
-import 'package:lava_lamp_clock/painters/outline.painter.dart';
-import 'package:lava_lamp_clock/painters/loader.painter.dart';
 import 'package:path_drawing/path_drawing.dart';
+
+import 'painters/loader.painter.dart';
+import 'painters/outline.painter.dart';
 
 class ClockSeparator extends StatelessWidget {
   final Color color;

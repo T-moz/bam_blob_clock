@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:blob_clock/Bubble.dart';
+import 'package:blob_clock/digit.dart';
+import 'package:blob_clock/digitClipper.dart';
 import 'package:flutter/material.dart';
 import 'package:path_morph/path_morph.dart';
-import 'package:lava_lamp_clock/bubble.dart';
-import 'package:lava_lamp_clock/digit.dart';
-import 'package:lava_lamp_clock/digitClipper.dart';
-import 'package:lava_lamp_clock/painters/bubble.painter.dart';
-import 'package:lava_lamp_clock/painters/outline.painter.dart';
-import 'package:lava_lamp_clock/painters/loader.painter.dart';
+
+
+import 'painters/bubble.painter.dart';
+import 'painters/loader.painter.dart';
+import 'painters/outline.painter.dart';
 
 const MIN_BUBBLE_RADIUS = 1.0;
 const MAX_BUBBLE_RADIUS = 8.0;

@@ -1,20 +1,25 @@
 import 'dart:async';
 
+import 'package:blob_clock/clockDigit.dart';
+import 'package:blob_clock/clockSeparator.dart';
+import 'package:blob_clock/clockTime.dart';
 import 'package:flutter/material.dart';
-import 'package:lava_lamp_clock/clockDigit.dart';
-import 'package:lava_lamp_clock/clockSeparator.dart';
-import 'package:lava_lamp_clock/clockTime.dart';
+import 'package:flutter_clock_helper/model.dart';
+
 
 enum _Element {
   background,
   color,
   outline,
 }
+final _lightBackground = "assets/img/lightBackground.png";
+
+final _darkBackground = "assets/img/darkBackground.png";
 
 final _lightTheme = {
   _Element.background: Color(0xFFF1F3F6),
   _Element.color: Color(0xFFEAA89A),
-  _Element.outline: Color(0xFF676767),
+  _Element.outline: Colors.black,
 };
 
 final _darkTheme = {
@@ -24,7 +29,11 @@ final _darkTheme = {
 };
 
 class Clock extends StatefulWidget {
-  Clock({Key key}) : super(key: key);
+  Clock( this.model);
+
+  //const Clock(this.model);
+
+  final ClockModel model;
 
   @override
   _ClockState createState() => _ClockState();
@@ -42,55 +51,87 @@ class _ClockState extends State<Clock> {
       });
     });
     super.initState();
+        widget.model.addListener(_updateModel);
+    _updateModel();
+  }
+  @override
+  void didUpdateWidget(Clock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.model != oldWidget.model) {
+      oldWidget.model.removeListener(_updateModel);
+      widget.model.addListener(_updateModel);
+    }
   }
 
+  @override
+  void dispose() {
+    widget.model.removeListener(_updateModel);
+    widget.model.dispose();
+    super.dispose();
+  }
+
+  void _updateModel() {
+    setState(() {
+      // Cause the clock to rebuild when the model changes.
+    });
+  }
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).brightness == Brightness.light
         ? _lightTheme
         : _darkTheme;
+        final background = Theme.of(context).brightness == Brightness.light
+        ? _lightBackground
+        : _darkBackground;
     return Container(
-      padding: EdgeInsets.all(50.0),
-      color: colors[_Element.background],
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Columns for the clock
-          ClockDigit(
-            digit: _now.hourTens,
-            color: colors[_Element.color],
-            backgroundColor: colors[_Element.background],
-            outlineColor: colors[_Element.outline],
-            bubbleFrequency: 0.2,
-          ),
-          ClockDigit(
-            digit: _now.hourOnes,
-            color: colors[_Element.color],
-            backgroundColor: colors[_Element.background],
-            outlineColor: colors[_Element.outline],
-            bubbleFrequency: 0.4,
-          ),
-          ClockSeparator(
-            color: colors[_Element.color],
-            backgroundColor: colors[_Element.background],
-            outlineColor: colors[_Element.outline],
-          ),
-          ClockDigit(
-            digit: _now.minuteTens,
-            color: colors[_Element.color],
-            backgroundColor: colors[_Element.background],
-            outlineColor: colors[_Element.outline],
-            bubbleFrequency: 0.6,
-          ),
-          ClockDigit(
-            digit: _now.minuteOnes,
-            color: colors[_Element.color],
-            backgroundColor: colors[_Element.background],
-            outlineColor: colors[_Element.outline],
-            bubbleFrequency: 0.8,
-          ),
-        ],
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(background),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 46.0, horizontal: 56.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Columns for the clock
+            ClockDigit(
+              digit: _now.hourTens,
+              color: colors[_Element.color],
+              backgroundColor: colors[_Element.background],
+              outlineColor: colors[_Element.outline],
+              bubbleFrequency: 0.2,
+            ),
+            ClockDigit(
+              digit: _now.hourOnes,
+              color: colors[_Element.color],
+              backgroundColor: colors[_Element.background],
+              outlineColor: colors[_Element.outline],
+              bubbleFrequency: 0.4,
+            ),
+            ClockSeparator(
+              color: colors[_Element.color],
+              backgroundColor: colors[_Element.background],
+              outlineColor: colors[_Element.outline],
+            ),
+            ClockDigit(
+              digit: _now.minuteTens,
+              color: colors[_Element.color],
+              backgroundColor: colors[_Element.background],
+              outlineColor: colors[_Element.outline],
+              bubbleFrequency: 0.6,
+            ),
+            ClockDigit(
+              digit: _now.minuteOnes,
+              color: colors[_Element.color],
+              backgroundColor: colors[_Element.background],
+              outlineColor: colors[_Element.outline],
+              bubbleFrequency: 0.8,
+            ),
+          ],
+        ),
       ),
     );
   }

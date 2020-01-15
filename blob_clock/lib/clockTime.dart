@@ -1,4 +1,4 @@
-import 'package:lava_lamp_clock/digit.dart';
+import 'package:blob_clock/digit.dart';
 
 const COMMOM_DURATIONS = {
   'TEN_MINUTES': 10 * 60,

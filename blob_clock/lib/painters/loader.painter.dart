@@ -1,5 +1,5 @@
+import 'package:blob_clock/digit.dart';
 import 'package:flutter/material.dart';
-import 'package:lava_lamp_clock/digit.dart';
 
 class LoaderPainter extends CustomPainter {
   LoaderPainter({
