@@ -59,11 +59,11 @@ class Digit {
           break;
         case 3:
           svgPath = THREE_PATH + extraPath + extraPath;
-          nextSvgPath = FOUR_PATH + extraPath;
+          nextSvgPath = FOUR_PATH ;
           viewBox = ViewBox(115, 179);
           break;
         case 4:
-          svgPath = FOUR_PATH + extraPath;
+          svgPath = FOUR_PATH ;
           nextSvgPath = FIVE_PATH + extraPath;
           viewBox = ViewBox(136, 179);
           break;
