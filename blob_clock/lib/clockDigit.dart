@@ -51,9 +51,8 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   AnimationController _liquidSurfaceAnimationController;
   Animation<double> _liquidSurfaceAnimation;
   List<Bubble> _bubbles;
-
-  SampledPathData data;
-  AnimationController controller;
+  SampledPathData _morphingPathData;
+  AnimationController _morphingPathController;
 
   @override
   void initState() {
@@ -63,7 +62,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
 
   void func(int i, Offset z) {
     setState((){
-      data.shiftedPoints[i] = z;
+      _morphingPathData.shiftedPoints[i] = z;
     });
   }
 
@@ -82,7 +81,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
     for (final bubble in _bubbles) {
       bubble.animationController.dispose();
     }
-    controller.dispose();
+    _morphingPathController.dispose();
     super.dispose();
   }
 
@@ -95,7 +94,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           children: <Widget>[
             ClipPath(
               clipper: DigitClipper(
-                PathMorph.generatePath(data),
+                PathMorph.generatePath(_morphingPathData),
               ),
               child: AnimatedContainer(
                 duration: Duration(seconds: 2),
@@ -154,7 +153,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
               child: CustomPaint(
                 size: Size.infinite,
                 painter: OutlinePainter(
-                  path: PathMorph.generatePath(data),
+                  path: PathMorph.generatePath(_morphingPathData),
                   color: widget.outlineColor,
                 ),
               ),
@@ -205,12 +204,12 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       timer.cancel();
     });
 
-    data = PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
-    controller = AnimationController(vsync: this,
+    _morphingPathData = PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
+    _morphingPathController = AnimationController(vsync: this,
         duration: Duration(seconds: 2));
-    PathMorph.generateAnimations(controller, data, func);
+    PathMorph.generateAnimations(_morphingPathController, _morphingPathData, func);
     Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 2), () {
-      controller.forward();
+      _morphingPathController.forward();
     });
   }
 
