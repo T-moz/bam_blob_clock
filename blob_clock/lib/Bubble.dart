@@ -6,6 +6,7 @@ class Bubble {
   final Color color;
   final double dx;
   Animation<double> animation;
+  bool controllerDisposed = false;
 
   Bubble({
     @required this.animationController,

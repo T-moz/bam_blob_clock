@@ -51,9 +51,8 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   AnimationController _liquidSurfaceAnimationController;
   Animation<double> _liquidSurfaceAnimation;
   List<Bubble> _bubbles;
-
-  SampledPathData data;
-  AnimationController controller;
+  SampledPathData _morphingPathData;
+  AnimationController _morphingPathController;
 
   @override
   void initState() {
@@ -63,7 +62,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
 
   void func(int i, Offset z) {
     setState((){
-      data.shiftedPoints[i] = z;
+      _morphingPathData.shiftedPoints[i] = z;
     });
   }
 
@@ -71,18 +70,17 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   void didUpdateWidget(ClockDigit oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.digit.value != widget.digit.value) {
+      _disposeAnimationControllers();
       _init();
     }
   }
 
   @override
   void dispose() {
-    _loaderAnimationController.dispose();
-    _liquidSurfaceAnimationController.dispose();
     for (final bubble in _bubbles) {
       bubble.animationController.dispose();
     }
-    controller.dispose();
+    _disposeAnimationControllers();
     super.dispose();
   }
 
@@ -95,7 +93,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           children: <Widget>[
             ClipPath(
               clipper: DigitClipper(
-                PathMorph.generatePath(data),
+                PathMorph.generatePath(_morphingPathData),
               ),
               child: AnimatedContainer(
                 duration: Duration(seconds: 2),
@@ -125,24 +123,26 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    ..._bubbles.map((bubble) => AnimatedBuilder(
-                      animation: bubble.animation,
-                      builder: (_, child) {
-                        bubble.animationController.forward();
-                        final dy = (1 - bubble.animation.value) * (widget.digit.viewBox.height + bubble.radius) - bubble.radius;
-                        return CustomPaint(
-                          size: Size.infinite,
-                          painter: BubblePainter(
-                            bubble: bubble,
-                            dy: dy,
-                          ),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: bubble.color,
-                        radius: bubble.radius,
-                      ),
-                    )),
+                    ..._bubbles
+                      .where((bubble) => bubble.controllerDisposed == false)
+                      .map((bubble) => AnimatedBuilder(
+                        animation: bubble.animation,
+                        builder: (_, child) {
+                          bubble.animationController.forward();
+                          final dy = (1 - bubble.animation.value) * (widget.digit.viewBox.height + bubble.radius) - bubble.radius;
+                          return CustomPaint(
+                            size: Size.infinite,
+                            painter: BubblePainter(
+                              bubble: bubble,
+                              dy: dy,
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: bubble.color,
+                          radius: bubble.radius,
+                        ),
+                      )),
                   ],
                 ),
               ),
@@ -154,7 +154,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
               child: CustomPaint(
                 size: Size.infinite,
                 painter: OutlinePainter(
-                  path: PathMorph.generatePath(data),
+                  path: PathMorph.generatePath(_morphingPathData),
                   color: widget.outlineColor,
                 ),
               ),
@@ -177,7 +177,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           curve: Curves.linear,
         ),
       );
-    _loaderAnimationController.forward().orCancel;
+    _loaderAnimationController.forward();
 
     _liquidSurfaceAnimationController = AnimationController(
       duration: Duration(seconds: 3),
@@ -190,14 +190,19 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           curve: Curves.linear,
         ),
       );
-    _liquidSurfaceAnimationController.repeat(reverse: true).orCancel;
+    _liquidSurfaceAnimationController.repeat(reverse: true);
 
     _bubbles = [];
     final timer = Timer.periodic(Duration(seconds: 1), (_) {
       final randomNumberGenerator = Random();
       if (randomNumberGenerator.nextDouble() >= (1.0 - widget.bubbleFrequency)) {
         setState(() {
-          _bubbles.add(_initBubble());
+          final bubble = _initBubble();
+          _bubbles.add(bubble);
+          Future.delayed(bubble.animationController.duration, () {
+            bubble.animationController.dispose();
+            bubble.controllerDisposed = true;
+          });
         });
       }
     });
@@ -205,13 +210,19 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       timer.cancel();
     });
 
-    data = PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
-    controller = AnimationController(vsync: this,
+    _morphingPathData = PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
+    _morphingPathController = AnimationController(vsync: this,
         duration: Duration(seconds: 2));
-    PathMorph.generateAnimations(controller, data, func);
+    PathMorph.generateAnimations(_morphingPathController, _morphingPathData, func);
     Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 2), () {
-      controller.forward();
+      _morphingPathController.forward();
     });
+  }
+
+  _disposeAnimationControllers() {
+    _loaderAnimationController.dispose();
+    _liquidSurfaceAnimationController.dispose();
+    _morphingPathController.dispose();
   }
 
   Bubble _initBubble() {
