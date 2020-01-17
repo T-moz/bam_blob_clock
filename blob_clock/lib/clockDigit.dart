@@ -70,18 +70,17 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   void didUpdateWidget(ClockDigit oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.digit.value != widget.digit.value) {
+      _disposeAnimationControllers();
       _init();
     }
   }
 
   @override
   void dispose() {
-    _loaderAnimationController.dispose();
-    _liquidSurfaceAnimationController.dispose();
     for (final bubble in _bubbles) {
       bubble.animationController.dispose();
     }
-    _morphingPathController.dispose();
+    _disposeAnimationControllers();
     super.dispose();
   }
 
@@ -176,7 +175,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           curve: Curves.linear,
         ),
       );
-    _loaderAnimationController.forward().orCancel;
+    _loaderAnimationController.forward();
 
     _liquidSurfaceAnimationController = AnimationController(
       duration: Duration(seconds: 3),
@@ -189,7 +188,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           curve: Curves.linear,
         ),
       );
-    _liquidSurfaceAnimationController.repeat(reverse: true).orCancel;
+    _liquidSurfaceAnimationController.repeat(reverse: true);
 
     _bubbles = [];
     final timer = Timer.periodic(Duration(seconds: 1), (_) {
@@ -211,6 +210,15 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
     Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 2), () {
       _morphingPathController.forward();
     });
+  }
+
+  _disposeAnimationControllers() {
+    _loaderAnimationController.dispose();
+    _liquidSurfaceAnimationController.dispose();
+    for (final bubble in _bubbles) {
+      bubble.animationController.dispose();
+    }
+    _morphingPathController.dispose();
   }
 
   Bubble _initBubble() {
