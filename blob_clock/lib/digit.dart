@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:path_drawing/path_drawing.dart';
 
+const SCALE_RATIO = 0.8;
 
 const ZERO_PATH = 'M55.4858 179C38.1578 179 24.7058 171.172 15.1298 155.516C5.70575 139.708 0.99375 117.82 0.99375 89.852C0.99375 61.732 5.70575 39.844 15.1298 24.188C24.7058 8.53199 38.1578 0.703985 55.4858 0.703985C67.0378 0.703985 76.8418 4.35199 84.8978 11.648C93.1058 18.792 99.3378 29.052 103.594 42.428C107.85 55.652 109.978 71.46 109.978 89.852C109.978 108.244 107.85 124.128 103.594 137.504C99.3378 150.728 93.1058 160.988 84.8978 168.284C76.8418 175.428 67.0378 179 55.4858 179ZM55.4858 155.288C62.4778 155.288 68.2538 152.476 72.8138 146.852C77.3738 141.076 80.7938 133.248 83.0738 123.368C85.3538 113.488 86.4938 102.316 86.4938 89.852C86.4938 77.388 85.3538 66.216 83.0738 56.336C80.7938 46.456 77.3738 38.628 72.8138 32.852C68.2538 27.076 62.4778 24.188 55.4858 24.188C48.4938 24.188 42.7178 27.076 38.1578 32.852C33.5978 38.476 30.1778 46.228 27.8978 56.108C25.6178 65.988 24.4778 77.236 24.4778 89.852C24.4778 102.468 25.6178 113.716 27.8978 123.596C30.1778 133.476 33.5978 141.228 38.1578 146.852C42.8698 152.476 48.6458 155.288 55.4858 155.288Z';
 const ZERO_EXTRA_PATH = 'M55.4858 179C38.1578 179 24.7058 171.172 15.1298 155.516';
@@ -54,59 +55,60 @@ class Digit {
         case 0:
           svgPath = ZERO_PATH + ZERO_EXTRA_PATH;
           nextSvgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
-          viewBox = ViewBox(110, 179);
+          viewBox = ViewBox(110 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 1:
           svgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
           nextSvgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
-          viewBox = ViewBox(60, 179);
+          viewBox = ViewBox(60 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 2:
           svgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
           nextSvgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
-          viewBox = ViewBox(109, 179);
+          viewBox = ViewBox(109 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 3:
           svgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
           nextSvgPath = FOUR_PATH + FOUR_EXTRA_PATH;
-          viewBox = ViewBox(115, 179);
+          viewBox = ViewBox(115 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 4:
           svgPath = FOUR_PATH + FOUR_EXTRA_PATH;
           nextSvgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
-          viewBox = ViewBox(136, 179);
+          viewBox = ViewBox(136 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 5:
           svgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
           nextSvgPath = SIX_PATH + SIX_EXTRA_PATH;
-          viewBox = ViewBox(117, 179);
+          viewBox = ViewBox(117 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 6:
           svgPath = SIX_PATH + SIX_EXTRA_PATH;
           nextSvgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
-          viewBox = ViewBox(108, 178);
+          viewBox = ViewBox(108 * SCALE_RATIO, 178 * SCALE_RATIO);
           break;
         case 7:
           svgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
           nextSvgPath = HEIGHT_PATH;
-          viewBox = ViewBox(112, 179);
+          viewBox = ViewBox(112 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 8:
           svgPath = HEIGHT_PATH;
           nextSvgPath = NINE_PATH + NINE_EXTRA_PATH;
-          viewBox = ViewBox(107, 180);
+          viewBox = ViewBox(107 * SCALE_RATIO, 180 * SCALE_RATIO);
           break;
         case 9:
           svgPath = NINE_PATH + NINE_EXTRA_PATH;
           nextSvgPath = ZERO_PATH + ZERO_EXTRA_PATH;
-          viewBox = ViewBox(108, 179);
+          viewBox = ViewBox(108 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         default:
           svgPath = '';
           nextSvgPath = '';
           viewBox = ViewBox(0, 0);
       }
-      path = parseSvgPathData(svgPath);
-      nextPath = parseSvgPathData(nextSvgPath);
+      final matrix4 = Matrix4.identity()..scale(SCALE_RATIO, SCALE_RATIO);
+      path = parseSvgPathData(svgPath).transform(matrix4.storage);
+      nextPath = parseSvgPathData(nextSvgPath).transform(matrix4.storage);
     }
 }
