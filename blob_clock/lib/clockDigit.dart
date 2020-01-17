@@ -53,18 +53,24 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   AnimationController _upperliquidSurfaceAnimationController;
   Animation<double> _upperliquidSurfaceAnimation;
   List<Bubble> _bubbles;
-  SampledPathData _morphingPathData;
-  AnimationController _morphingPathController;
+  SampledPathData _morphingPathData1;
+  SampledPathData _morphingPathData2;
+
+  AnimationController _morphingPathControllerDigitBlob;
+  AnimationController _morphingPathControllerBlobDigit;
+
+  bool triggerAnimation;
 
   @override
   void initState() {
+    triggerAnimation = true;
     _init();
     super.initState();
   }
 
   void func(int i, Offset z) {
     setState(() {
-      _morphingPathData.shiftedPoints[i] = z;
+      _morphingPathData1.shiftedPoints[i] = z;
     });
   }
 
@@ -73,6 +79,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.digit.value != widget.digit.value) {
       _disposeAnimationControllers();
+      triggerAnimation = true;
       _init();
     }
   }
@@ -95,7 +102,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
           children: <Widget>[
             ClipPath(
               clipper: DigitClipper(
-                PathMorph.generatePath(_morphingPathData),
+                PathMorph.generatePath(_morphingPathData1),
               ),
               child: AnimatedContainer(
                 duration: Duration(seconds: 2),
@@ -180,7 +187,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
               child: CustomPaint(
                 size: Size.infinite,
                 painter: OutlinePainter(
-                  path: PathMorph.generatePath(_morphingPathData),
+                  path: PathMorph.generatePath(_morphingPathData1),
                   color: widget.outlineColor,
                 ),
               ),
@@ -248,24 +255,40 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       timer.cancel();
     });
 
-    _morphingPathData =
-        PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
-    _morphingPathController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+    _morphingPathData1 =
+        PathMorph.samplePaths(widget.digit.path, widget.digit.blobPath);
+    _morphingPathControllerDigitBlob = AnimationController(
+        vsync: this, duration: Duration(seconds: triggerAnimation ? 1 : 2));
     PathMorph.generateAnimations(
-        _morphingPathController, _morphingPathData, func);
+        _morphingPathControllerDigitBlob, _morphingPathData1, func);
     Future.delayed(
-        widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 2), () {
-      _morphingPathController.forward();
+        widget.digit.timeLeftBeforeDigitUpdate -
+            Duration(seconds: triggerAnimation ? 1 : 2), () {
+      _morphingPathControllerDigitBlob.forward();
     });
+
+    if (triggerAnimation) {
+      _morphingPathData2 =
+          PathMorph.samplePaths(widget.digit.blobPath, widget.digit.nextPath);
+      _morphingPathControllerBlobDigit =
+          AnimationController(vsync: this, duration: Duration(seconds: 1));
+      PathMorph.generateAnimations(
+          _morphingPathControllerBlobDigit, _morphingPathData2, func);
+      Future.delayed(
+          widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 1), () {
+        _morphingPathControllerBlobDigit.forward();
+      });
+    }
   }
 
   _disposeAnimationControllers() {
     _loaderAnimationController.dispose();
     _liquidSurfaceAnimationController.dispose();
     _upperliquidSurfaceAnimationController.dispose();
-
-    _morphingPathController.dispose();
+    _morphingPathControllerDigitBlob.dispose();
+    if (triggerAnimation) {
+      _morphingPathControllerBlobDigit.dispose();
+    }
   }
 
   Bubble _initBubble() {
