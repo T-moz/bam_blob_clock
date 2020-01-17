@@ -123,24 +123,26 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    ..._bubbles.map((bubble) => AnimatedBuilder(
-                      animation: bubble.animation,
-                      builder: (_, child) {
-                        bubble.animationController.forward();
-                        final dy = (1 - bubble.animation.value) * (widget.digit.viewBox.height + bubble.radius) - bubble.radius;
-                        return CustomPaint(
-                          size: Size.infinite,
-                          painter: BubblePainter(
-                            bubble: bubble,
-                            dy: dy,
-                          ),
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: bubble.color,
-                        radius: bubble.radius,
-                      ),
-                    )),
+                    ..._bubbles
+                      .where((bubble) => bubble.controllerDisposed == false)
+                      .map((bubble) => AnimatedBuilder(
+                        animation: bubble.animation,
+                        builder: (_, child) {
+                          bubble.animationController.forward();
+                          final dy = (1 - bubble.animation.value) * (widget.digit.viewBox.height + bubble.radius) - bubble.radius;
+                          return CustomPaint(
+                            size: Size.infinite,
+                            painter: BubblePainter(
+                              bubble: bubble,
+                              dy: dy,
+                            ),
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: bubble.color,
+                          radius: bubble.radius,
+                        ),
+                      )),
                   ],
                 ),
               ),
@@ -195,7 +197,12 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       final randomNumberGenerator = Random();
       if (randomNumberGenerator.nextDouble() >= (1.0 - widget.bubbleFrequency)) {
         setState(() {
-          _bubbles.add(_initBubble());
+          final bubble = _initBubble();
+          _bubbles.add(bubble);
+          Future.delayed(bubble.animationController.duration, () {
+            bubble.animationController.dispose();
+            bubble.controllerDisposed = true;
+          });
         });
       }
     });
@@ -215,9 +222,6 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
   _disposeAnimationControllers() {
     _loaderAnimationController.dispose();
     _liquidSurfaceAnimationController.dispose();
-    for (final bubble in _bubbles) {
-      bubble.animationController.dispose();
-    }
     _morphingPathController.dispose();
   }
 
