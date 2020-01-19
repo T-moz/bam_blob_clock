@@ -24,6 +24,8 @@ class ClockDigit extends StatefulWidget {
   final Color backgroundColor;
   final Color outlineColor;
   final double bubbleFrequency;
+  final double offset;
+  final bool animated;
 
   const ClockDigit({
     Key key,
@@ -32,6 +34,8 @@ class ClockDigit extends StatefulWidget {
     @required this.backgroundColor,
     @required this.outlineColor,
     @required this.bubbleFrequency,
+    @required this.offset,
+    @required this.animated,
   })  : assert(digit != null, 'digit is required'),
         assert(color != null, 'color is required'),
         assert(backgroundColor != null, 'backgroundColor is required'),
@@ -113,7 +117,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
                             return CustomPaint(
                               size: Size.infinite,
                               painter: LoaderPainter(
-                                progress: _loaderAnimation.value,
+                                progress: widget.animated ? _loaderAnimation.value : 1.0,
                                 liquidSurface: _liquidSurfaceAnimation.value,
                                 color: widget.color,
                                 backgroundColor: widget.backgroundColor,
@@ -182,6 +186,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
                 painter: OutlinePainter(
                   path: PathMorph.generatePath(_morphingPathData),
                   color: widget.outlineColor,
+                  offset: widget.offset
                 ),
               ),
             ),

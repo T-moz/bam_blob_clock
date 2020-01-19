@@ -64,6 +64,7 @@ class ClockSeparator extends StatelessWidget {
               painter: OutlinePainter(
                 path: separatorPath,
                 color: outlineColor,
+                offset: -4.0,
               ),
             ),
           ),

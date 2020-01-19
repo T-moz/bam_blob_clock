@@ -6,7 +6,6 @@ import 'package:blob_clock/clockTime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
 
-
 enum _Element {
   background,
   color,
@@ -29,7 +28,7 @@ final _darkTheme = {
 };
 
 class Clock extends StatefulWidget {
-  Clock( this.model);
+  Clock(this.model);
 
   //const Clock(this.model);
 
@@ -51,9 +50,10 @@ class _ClockState extends State<Clock> {
       });
     });
     super.initState();
-        widget.model.addListener(_updateModel);
+    widget.model.addListener(_updateModel);
     _updateModel();
   }
+
   @override
   void didUpdateWidget(Clock oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -75,12 +75,13 @@ class _ClockState extends State<Clock> {
       // Cause the clock to rebuild when the model changes.
     });
   }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).brightness == Brightness.light
         ? _lightTheme
         : _darkTheme;
-        final background = Theme.of(context).brightness == Brightness.light
+    final background = Theme.of(context).brightness == Brightness.light
         ? _lightBackground
         : _darkBackground;
     return Container(
@@ -103,6 +104,8 @@ class _ClockState extends State<Clock> {
               backgroundColor: colors[_Element.background],
               outlineColor: colors[_Element.outline],
               bubbleFrequency: 0.2,
+              offset: -4.0,
+              animated: false,
             ),
             ClockDigit(
               digit: _now.hourOnes,
@@ -110,6 +113,8 @@ class _ClockState extends State<Clock> {
               backgroundColor: colors[_Element.background],
               outlineColor: colors[_Element.outline],
               bubbleFrequency: 0.4,
+              offset: -4.0,
+              animated: false,
             ),
             ClockSeparator(
               color: colors[_Element.color],
@@ -122,6 +127,8 @@ class _ClockState extends State<Clock> {
               backgroundColor: colors[_Element.background],
               outlineColor: colors[_Element.outline],
               bubbleFrequency: 0.6,
+              offset: -4.0,
+              animated: false,
             ),
             ClockDigit(
               digit: _now.minuteOnes,
@@ -129,6 +136,8 @@ class _ClockState extends State<Clock> {
               backgroundColor: colors[_Element.background],
               outlineColor: colors[_Element.outline],
               bubbleFrequency: 0.8,
+              offset: -2.0,
+              animated: true,
             ),
           ],
         ),
