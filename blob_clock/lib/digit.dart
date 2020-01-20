@@ -24,6 +24,11 @@ const HEIGHT_EXTRA_PATH = '';
 const NINE_PATH = 'M54.0998 0.703985C64.5878 0.703985 73.8598 3.05999 81.9158 7.77199C90.1238 12.332 96.5078 18.716 101.068 26.924C105.628 34.98 107.908 44.252 107.908 54.74C107.908 66.444 105.02 76.78 99.2438 85.748L47.4878 172.16C44.7518 176.416 41.2558 178.544 36.9998 178.544C33.8078 178.544 31.1478 177.632 29.0198 175.808C26.8918 173.984 25.5238 171.704 24.9158 168.968C24.4598 166.232 25.0678 163.496 26.7398 160.76L57.9758 108.776C56.7598 108.928 55.4678 109.004 54.0998 109.004C43.6118 109.004 34.3398 106.724 26.2838 102.164C18.2278 97.452 11.9198 91.068 7.35977 83.012C2.79977 74.804 0.519766 65.38 0.519766 54.74C0.519766 44.252 2.79977 34.98 7.35977 26.924C11.9198 18.716 18.2278 12.332 26.2838 7.77199C34.3398 3.05999 43.6118 0.703985 54.0998 0.703985ZM54.3278 21.224C44.9038 21.224 37.2278 24.34 31.2998 30.572C25.3718 36.804 22.4078 44.86 22.4078 54.74C22.4078 64.62 25.3718 72.752 31.2998 79.136C37.2278 85.368 44.9038 88.484 54.3278 88.484C63.5998 88.484 71.1998 85.368 77.1278 79.136C83.0558 72.752 86.0198 64.62 86.0198 54.74C86.0198 44.86 83.0558 36.804 77.1278 30.572C71.1998 24.34 63.5998 21.224 54.3278 21.224Z';
 const NINE_EXTRA_PATH = 'M54.0998 0.703985C64.5878 0.703985 73.8598 3.05999 81.9158 7.77199';
 
+const BLOB_PATH =
+"M75.9916 3.24557C88.5476 5.6045 100.44 11.6218 109.359 24.3239C118.236 36.9682 123.091 53.6714 123.873 71.4427C124.713 90.5443 121.392 108.969 113.777 124.801C104.047 145.033 93.2895 169.783 75.9916 171C44.788 160.676 61.5216 123.06 48.724 106.068C35.2522 88.1813 1.41001 97.5487 1.00748 71.4427C0.602234 45.1605 16.7327 24.0967 32.3837 9.86238C45.161 -1.75847 60.9262 0.4152 75.9916 3.24557Z";
+const BLOB_EXTRA_PATH =
+    "M75.9916 3.24557C88.5476 5.6045 100.44 11.6218 109.359 24.3239";
+
 class ViewBox {
   double width;
   double height;
@@ -36,7 +41,7 @@ class Digit {
   Duration timeLeftBeforeDigitUpdate;
   double initialProgress;
   Path path;
-  Path nextPath;
+  Path blobPath;
   ViewBox viewBox;
 
   Digit({
@@ -50,65 +55,55 @@ class Digit {
     assert(initialProgress != null, 'initialProgress is required'),
     assert(initialProgress >= 0.0 && initialProgress <= 1.0, 'initialProgress is between 0 and 1') {
       String svgPath;
-      String nextSvgPath;
+      String blobSvgPath = BLOB_PATH + BLOB_EXTRA_PATH + BLOB_EXTRA_PATH;
       switch (value) {
         case 0:
           svgPath = ZERO_PATH + ZERO_EXTRA_PATH;
-          nextSvgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
           viewBox = ViewBox(110 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 1:
           svgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
-          nextSvgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
           viewBox = ViewBox(60 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 2:
           svgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
-          nextSvgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
           viewBox = ViewBox(109 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 3:
           svgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
-          nextSvgPath = FOUR_PATH + FOUR_EXTRA_PATH;
           viewBox = ViewBox(115 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 4:
           svgPath = FOUR_PATH + FOUR_EXTRA_PATH;
-          nextSvgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
           viewBox = ViewBox(136 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 5:
           svgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
-          nextSvgPath = SIX_PATH + SIX_EXTRA_PATH;
           viewBox = ViewBox(117 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 6:
           svgPath = SIX_PATH + SIX_EXTRA_PATH;
-          nextSvgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
           viewBox = ViewBox(108 * SCALE_RATIO, 178 * SCALE_RATIO);
           break;
         case 7:
           svgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
-          nextSvgPath = HEIGHT_PATH;
           viewBox = ViewBox(112 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 8:
           svgPath = HEIGHT_PATH;
-          nextSvgPath = NINE_PATH + NINE_EXTRA_PATH;
           viewBox = ViewBox(107 * SCALE_RATIO, 180 * SCALE_RATIO);
           break;
         case 9:
           svgPath = NINE_PATH + NINE_EXTRA_PATH;
-          nextSvgPath = ZERO_PATH + ZERO_EXTRA_PATH;
           viewBox = ViewBox(108 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         default:
           svgPath = '';
-          nextSvgPath = '';
           viewBox = ViewBox(0, 0);
       }
       final matrix4 = Matrix4.identity()..scale(SCALE_RATIO, SCALE_RATIO);
+
       path = parseSvgPathData(svgPath).transform(matrix4.storage);
-      nextPath = parseSvgPathData(nextSvgPath).transform(matrix4.storage);
+      blobPath = parseSvgPathData(blobSvgPath).transform(matrix4.storage);
     }
 }

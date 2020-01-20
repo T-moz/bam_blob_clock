@@ -18,6 +18,8 @@ const MAX_BUBBLE_RADIUS = 8.0;
 const MIN_BUBBLE_DURATION = 6;
 const MAX_BUBBLE_DURATION = 18;
 
+const MORPHING_DURATION = Duration(seconds: 2);
+
 class ClockDigit extends StatefulWidget {
   final Digit digit;
   final Color color;
@@ -98,7 +100,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
                 PathMorph.generatePath(_morphingPathData),
               ),
               child: AnimatedContainer(
-                duration: Duration(seconds: 2),
+                duration: MORPHING_DURATION,
                 height: widget.digit.viewBox.height,
                 width: widget.digit.viewBox.width,
                 color: widget.color.withOpacity(0.2),
@@ -174,7 +176,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
               ),
             ),
             AnimatedContainer(
-              duration: Duration(seconds: 2),
+              duration: MORPHING_DURATION,
               height: widget.digit.viewBox.height,
               width: widget.digit.viewBox.width,
               child: CustomPaint(
@@ -193,7 +195,8 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
 
   void _init() {
     _loaderAnimationController = AnimationController(
-      duration: widget.digit.timeLeftBeforeDigitUpdate,
+      duration: widget.digit.timeLeftBeforeDigitUpdate - MORPHING_DURATION,
+      reverseDuration: MORPHING_DURATION,
       vsync: this,
     );
     _loaderAnimation =
@@ -204,6 +207,9 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       ),
     );
     _loaderAnimationController.forward();
+    Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - (MORPHING_DURATION  + Duration(seconds: 1)), () {
+      _loaderAnimationController.reverse();
+    });
 
     _liquidSurfaceAnimationController = AnimationController(
       duration: Duration(seconds: 3),
@@ -249,15 +255,18 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
     });
 
     _morphingPathData =
-        PathMorph.samplePaths(widget.digit.path, widget.digit.nextPath);
+        PathMorph.samplePaths(widget.digit.blobPath, widget.digit.path);
     _morphingPathController =
-        AnimationController(vsync: this, duration: Duration(seconds: 2));
+        AnimationController(vsync: this, duration: MORPHING_DURATION);
     PathMorph.generateAnimations(
         _morphingPathController, _morphingPathData, func);
+    _morphingPathController.forward();
     Future.delayed(
-        widget.digit.timeLeftBeforeDigitUpdate - Duration(seconds: 2), () {
-      _morphingPathController.forward();
-    });
+      widget.digit.timeLeftBeforeDigitUpdate - MORPHING_DURATION,
+      () {
+        _morphingPathController.reverse();
+      },
+    );
   }
 
   _disposeAnimationControllers() {
