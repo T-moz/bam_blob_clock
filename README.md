@@ -2,14 +2,12 @@
 
 Welcome to Flutter Clock!
 
-See [flutter.dev/clock](https://flutter.dev/clock) for how to get started, submission requirements, contest rules, and FAQs.
+This is the BAM Block Clock 🕓 💥
 
-See a [live demo](https://maryx.github.io/flutter_clock) with Flutter for Web!
+Dark thème:
 
-Example [Analog Clock](analog_clock)
+<img src='blob_clock_dark.gif' width='350'>
 
-<img src='analog_clock/analog.gif' width='350'>
+Light thème:
 
-Example [Digital Clock](digital_clock)
-
-<img src='digital_clock/digital.gif' width='350'>
+<img src='blob_clock_light.gif' width='350'>
