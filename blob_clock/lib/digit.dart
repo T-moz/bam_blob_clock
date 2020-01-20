@@ -41,7 +41,6 @@ class Digit {
   Duration timeLeftBeforeDigitUpdate;
   double initialProgress;
   Path path;
-  Path nextPath;
   Path blobPath;
   ViewBox viewBox;
 
@@ -56,69 +55,54 @@ class Digit {
     assert(initialProgress != null, 'initialProgress is required'),
     assert(initialProgress >= 0.0 && initialProgress <= 1.0, 'initialProgress is between 0 and 1') {
       String svgPath;
-      String nextSvgPath;
       String blobSvgPath = BLOB_PATH + BLOB_EXTRA_PATH + BLOB_EXTRA_PATH;
       switch (value) {
         case 0:
           svgPath = ZERO_PATH + ZERO_EXTRA_PATH;
-          nextSvgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
           viewBox = ViewBox(110 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 1:
           svgPath = ONE_PATH + ONE_EXTRA_PATH + ONE_EXTRA_PATH;
-          nextSvgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
           viewBox = ViewBox(60 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 2:
           svgPath = TWO_PATH + TWO_EXTRA_PATH + TWO_EXTRA_PATH;
-          nextSvgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
           viewBox = ViewBox(109 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 3:
           svgPath = THREE_PATH + THREE_EXTRA_PATH + THREE_EXTRA_PATH;
-          nextSvgPath = FOUR_PATH + FOUR_EXTRA_PATH;
           viewBox = ViewBox(115 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 4:
           svgPath = FOUR_PATH + FOUR_EXTRA_PATH;
-          nextSvgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
           viewBox = ViewBox(136 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 5:
           svgPath = FIVE_PATH + FIVE_EXTRA_PATH + FIVE_EXTRA_PATH;
-          nextSvgPath = SIX_PATH + SIX_EXTRA_PATH;
           viewBox = ViewBox(117 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 6:
           svgPath = SIX_PATH + SIX_EXTRA_PATH;
-          nextSvgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
           viewBox = ViewBox(108 * SCALE_RATIO, 178 * SCALE_RATIO);
           break;
         case 7:
           svgPath = SEVEN_PATH + SEVEN_EXTRA_PATH + SEVEN_EXTRA_PATH;
-          nextSvgPath = HEIGHT_PATH;
           viewBox = ViewBox(112 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         case 8:
           svgPath = HEIGHT_PATH;
-          nextSvgPath = NINE_PATH + NINE_EXTRA_PATH;
           viewBox = ViewBox(107 * SCALE_RATIO, 180 * SCALE_RATIO);
           break;
         case 9:
           svgPath = NINE_PATH + NINE_EXTRA_PATH;
-          nextSvgPath = ZERO_PATH + ZERO_EXTRA_PATH;
           viewBox = ViewBox(108 * SCALE_RATIO, 179 * SCALE_RATIO);
           break;
         default:
           svgPath = '';
-          nextSvgPath = '';
           viewBox = ViewBox(0, 0);
       }
       final matrix4 = Matrix4.identity()..scale(SCALE_RATIO, SCALE_RATIO);
       path = parseSvgPathData(svgPath).transform(matrix4.storage);
       blobPath = parseSvgPathData(blobSvgPath).transform(matrix4.storage);
-        // ..shift(
-        //   Offset(viewBox.width / 2, viewBox.height / 2)
-        // );
     }
 }
