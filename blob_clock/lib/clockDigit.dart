@@ -70,7 +70,7 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
 
   void func1(int i, Offset z) {
     setState(() {
-      _morphingPathData2.shiftedPoints[i] = z;
+      _morphingPathData1.shiftedPoints[i] = z;
     });
   }
 
@@ -270,18 +270,19 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
     PathMorph.generateAnimations(
         _morphingPathControllerDigitBlob, _morphingPathData1, func1);
 
-
-    _morphingPathData2 =
+    _morphingPathData1 =
         PathMorph.samplePaths(widget.digit.blobPath, widget.digit.nextPath);
 
     _morphingPathControllerBlobDigit =
         AnimationController(vsync: this, duration: Duration(seconds: 2));
 
     PathMorph.generateAnimations(
-        _morphingPathControllerBlobDigit, _morphingPathData2, func2);
+        _morphingPathControllerBlobDigit, _morphingPathData1, func1);
+
     _morphingPathControllerBlobDigit.forward();
+
     Future.delayed(
-        widget.digit.timeLeftBeforeDigitUpdate - Duration(milliseconds: 2500),
+        widget.digit.timeLeftBeforeDigitUpdate - Duration(milliseconds: 2050),
         () {
       _morphingPathControllerDigitBlob.forward();
     });
