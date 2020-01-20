@@ -23,7 +23,4 @@ flutter:
   uses-material-design: true
   assets:
     - assets/img/
-  fonts:
-    - family : Nunito
-      fonts:
-        - asset: assets/fonts/Nunito-Bold.ttf
+
