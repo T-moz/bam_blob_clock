@@ -116,7 +116,9 @@ class Digit {
       }
       final matrix4 = Matrix4.identity()..scale(SCALE_RATIO, SCALE_RATIO);
       path = parseSvgPathData(svgPath).transform(matrix4.storage);
-      nextPath = parseSvgPathData(nextSvgPath).transform(matrix4.storage);
-      blobPath = parseSvgPathData(blobSvgPath).transform(matrix4.storage);
+      blobPath = parseSvgPathData(blobSvgPath).transform(matrix4.storage)
+        ..shift(
+          Offset(viewBox.width / 2, viewBox.height / 2)
+        );
     }
 }
