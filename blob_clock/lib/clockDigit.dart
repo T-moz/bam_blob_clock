@@ -195,7 +195,8 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
 
   void _init() {
     _loaderAnimationController = AnimationController(
-      duration: widget.digit.timeLeftBeforeDigitUpdate,
+      duration: widget.digit.timeLeftBeforeDigitUpdate - MORPHING_DURATION,
+      reverseDuration: MORPHING_DURATION,
       vsync: this,
     );
     _loaderAnimation =
@@ -206,6 +207,9 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       ),
     );
     _loaderAnimationController.forward();
+    Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - (MORPHING_DURATION  + Duration(seconds: 1)), () {
+      _loaderAnimationController.reverse();
+    });
 
     _liquidSurfaceAnimationController = AnimationController(
       duration: Duration(seconds: 3),
