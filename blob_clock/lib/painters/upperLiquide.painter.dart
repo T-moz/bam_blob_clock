@@ -8,8 +8,7 @@ class Upperliquide extends CustomPainter {
     @required this.backgroundColor,
     @required this.viewBox,
     this.clearCanvas = false,
-  })  : 
-        assert(liquidSurface != null, 'liquidSurface is required'),
+  })  : assert(liquidSurface != null, 'liquidSurface is required'),
         assert(color != null, 'color is required'),
         assert(backgroundColor != null, 'backgroundColor is required'),
         assert(viewBox != null, 'viewBox is required');
@@ -34,7 +33,7 @@ class Upperliquide extends CustomPainter {
     );
     path.quadraticBezierTo(
       viewBox.width / 4,
-      height + liquidSurface * 2/3,
+      height + liquidSurface * 2 / 3,
       0.0,
       height,
     );
@@ -45,6 +44,5 @@ class Upperliquide extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(Upperliquide oldDelegate) =>
-      false;
+  bool shouldRepaint(Upperliquide oldDelegate) => false;
 }

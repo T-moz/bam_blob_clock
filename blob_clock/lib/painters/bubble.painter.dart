@@ -5,9 +5,8 @@ class BubblePainter extends CustomPainter {
   BubblePainter({
     @required this.bubble,
     @required this.dy,
-  }) :
-    assert(bubble != null, 'bubble is required'),
-    assert(dy != null, 'dy is required');
+  })  : assert(bubble != null, 'bubble is required'),
+        assert(dy != null, 'dy is required');
 
   final Bubble bubble;
   final double dy;
@@ -17,8 +16,7 @@ class BubblePainter extends CustomPainter {
     canvas.drawCircle(
       Offset(bubble.dx, dy),
       bubble.radius,
-       Paint()
-        ..color = bubble.color,
+      Paint()..color = bubble.color,
     );
   }
 
