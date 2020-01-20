@@ -207,7 +207,9 @@ class _ClockDigitState extends State<ClockDigit> with TickerProviderStateMixin {
       ),
     );
     _loaderAnimationController.forward();
-    Future.delayed(widget.digit.timeLeftBeforeDigitUpdate - (MORPHING_DURATION  + Duration(seconds: 1)), () {
+    Future.delayed(
+        widget.digit.timeLeftBeforeDigitUpdate -
+            (MORPHING_DURATION + Duration(seconds: 1)), () {
       _loaderAnimationController.reverse();
     });
 

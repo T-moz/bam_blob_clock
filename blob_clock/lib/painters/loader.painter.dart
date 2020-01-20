@@ -46,11 +46,8 @@ class LoaderPainter extends CustomPainter {
     path.close();
 
     canvas.drawPath(
-      path, Paint()
-        ..color = clearCanvas ? backgroundColor : color
-    );
+        path, Paint()..color = clearCanvas ? backgroundColor : color);
   }
-
 
   @override
   bool shouldRepaint(LoaderPainter oldDelegate) =>

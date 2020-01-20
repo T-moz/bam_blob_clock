@@ -8,8 +8,7 @@ class Upperliquide extends CustomPainter {
     @required this.backgroundColor,
     @required this.viewBox,
     this.clearCanvas = false,
-  })  : 
-        assert(liquidSurface != null, 'liquidSurface is required'),
+  })  : assert(liquidSurface != null, 'liquidSurface is required'),
         assert(color != null, 'color is required'),
         assert(backgroundColor != null, 'backgroundColor is required'),
         assert(viewBox != null, 'viewBox is required');
@@ -27,35 +26,23 @@ class Upperliquide extends CustomPainter {
     path.moveTo(viewBox.width, 0.0);
     path.lineTo(viewBox.width, height);
     path.quadraticBezierTo(
-      viewBox.width * 7 / 8,
-      height + liquidSurface,
-      viewBox.width * 5 / 8,
-      height,
-    );
-    path.quadraticBezierTo(
-      viewBox.width * 3 / 8,
-      height - liquidSurface * 2 / 3,
-      viewBox.width * 2 / 8,
-      height,
-    );
-    
-    path.quadraticBezierTo(
-      viewBox.width / 8,
+      viewBox.width * 3 / 4,
       height - liquidSurface,
+      viewBox.width / 2,
+      height,
+    );
+    path.quadraticBezierTo(
+      viewBox.width / 4,
+      height + liquidSurface * 2 / 3,
       0.0,
       height,
     );
     path.lineTo(0.0, 0.0);
-
-    //path.lineTo(0.0, 0.0);
-
     path.close();
-
     canvas.drawPath(
         path, Paint()..color = clearCanvas ? backgroundColor : color);
   }
 
   @override
-  bool shouldRepaint(Upperliquide oldDelegate) =>
-      false;
+  bool shouldRepaint(Upperliquide oldDelegate) => false;
 }

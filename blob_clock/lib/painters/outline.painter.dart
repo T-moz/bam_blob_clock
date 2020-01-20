@@ -4,9 +4,8 @@ class OutlinePainter extends CustomPainter {
   OutlinePainter({
     @required this.path,
     @required this.color,
-  }) :
-    assert(path != null, 'path is required'),
-    assert(color != null, 'color is required');
+  })  : assert(path != null, 'path is required'),
+        assert(color != null, 'color is required');
 
   final Path path;
   final Color color;
