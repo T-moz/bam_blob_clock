@@ -39,11 +39,7 @@ class Upperliquide extends CustomPainter {
       height,
     );
     path.lineTo(0.0, 0.0);
-
-    //path.lineTo(0.0, 0.0);
-
     path.close();
-
     canvas.drawPath(
         path, Paint()..color = clearCanvas ? backgroundColor : color);
   }

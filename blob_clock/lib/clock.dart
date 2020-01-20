@@ -91,7 +91,7 @@ class _ClockState extends State<Clock> {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 74.0, horizontal: 84.0),
+        padding: const EdgeInsets.symmetric(vertical: 70.0, horizontal: 80.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
