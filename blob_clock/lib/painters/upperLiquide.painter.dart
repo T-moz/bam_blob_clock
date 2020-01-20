@@ -27,21 +27,14 @@ class Upperliquide extends CustomPainter {
     path.moveTo(viewBox.width, 0.0);
     path.lineTo(viewBox.width, height);
     path.quadraticBezierTo(
-      viewBox.width * 7 / 8,
-      height + liquidSurface,
-      viewBox.width * 5 / 8,
-      height,
-    );
-    path.quadraticBezierTo(
-      viewBox.width * 3 / 8,
-      height - liquidSurface * 2 / 3,
-      viewBox.width * 2 / 8,
-      height,
-    );
-    
-    path.quadraticBezierTo(
-      viewBox.width / 8,
+      viewBox.width * 3 / 4,
       height - liquidSurface,
+      viewBox.width / 2,
+      height,
+    );
+    path.quadraticBezierTo(
+      viewBox.width / 4,
+      height + liquidSurface * 2/3,
       0.0,
       height,
     );
