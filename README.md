@@ -2,12 +2,12 @@
 
 Welcome to Flutter Clock!
 
-This is the BAM Block Clock 🕓 💥
+This is the BAM Blob Clock 🕓 💥
 
-Dark thème:
+Dark theme:
 
 <img src='blob_clock_dark.gif' width='350'>
 
-Light thème:
+Light theme:
 
 <img src='blob_clock_light.gif' width='350'>
